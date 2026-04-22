@@ -9,7 +9,7 @@ const STATUSES: Array<{ value: InvoiceStatus | 'all'; label: string }> = [
   { value: 'paid', label: 'Paid' },
 ];
 
-const invoiceFilter: React.FC = () => {
+const InvoiceFilter: React.FC = () => {
   const { filter, dispatch } = useInvoices();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -106,4 +106,4 @@ const invoiceFilter: React.FC = () => {
   );
 };
 
-export default invoiceFilter;
+export default InvoiceFilter;
