@@ -83,28 +83,28 @@ const InvoiceContext = createContext<InvoiceContextType>({
   editingInvoice: null,
 });
 
-export const InvoiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  // Load from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem('invoice-data');
+const init = (defaultState: InvoiceState): InvoiceState => {
+  if (typeof window !== 'undefined') {
+    const stored = window.localStorage.getItem('invoice-data');
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        dispatch({ type: 'SET_INVOICES', payload: parsed });
+        return { ...defaultState, invoices: parsed };
       } catch {
-        dispatch({ type: 'SET_INVOICES', payload: sampleInvoices });
+        return { ...defaultState, invoices: sampleInvoices };
       }
-    } else {
-      dispatch({ type: 'SET_INVOICES', payload: sampleInvoices });
     }
-  }, []);
+  }
+  return { ...defaultState, invoices: sampleInvoices };
+};
+
+export const InvoiceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [state, dispatch] = useReducer(reducer, initialState, init);
 
   // Persist to localStorage on change
   useEffect(() => {
-    if (state.invoices.length > 0 || localStorage.getItem('invoice-data')) {
-      localStorage.setItem('invoice-data', JSON.stringify(state.invoices));
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('invoice-data', JSON.stringify(state.invoices));
     }
   }, [state.invoices]);
 
