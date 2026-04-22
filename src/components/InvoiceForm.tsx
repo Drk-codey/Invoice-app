@@ -176,10 +176,6 @@ const InvoiceForm: React.FC = () => {
 
   if (!isFormOpen) return null;
 
-  const totalAmount = calculateInvoiceTotal(
-    (form.items || []).map((item) => ({ ...item, total: calculateItemTotal(item) }))
-  );
-
   const hasErrors = Object.keys(errors).length > 0;
 
   return (
