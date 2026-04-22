@@ -53,10 +53,19 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, className, id 
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <div 
-        className={`${className} flex items-center justify-between cursor-pointer`}
+      <button 
+        type="button"
+        className={`${className} flex items-center justify-between cursor-pointer text-left`}
         onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }
+        }}
         id={id}
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
       >
         <span className="font-bold text-[#0C0E16] dark:text-white text-sm">
           {format(safeDisplayDate, 'dd MMM yyyy')}
@@ -64,18 +73,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, className, id 
         <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-[#7E88C3]">
           <path d="M14 2h-1V0h-2v2H5V0H3v2H2C.89 2 0 2.89 0 4v10c0 1.11.89 2 2 2h12c1.11 0 2-.89 2-2V4c0-1.11-.89-2-2-2Zm0 12H2V7h12v7ZM6 9H4v2h2V9Zm4 0H8v2h2V9Zm4 0h-2v2h2V9Z"/>
         </svg>
-      </div>
+      </button>
 
       {isOpen && (
         <div className="absolute top-[calc(100%+8px)] left-0 z-50 bg-white dark:bg-[#252945] rounded-xl shadow-[0_10px_20px_rgba(72,84,159,0.25)] dark:shadow-[0_10px_20px_rgba(0,0,0,0.25)] p-6 w-[260px]">
           <div className="flex justify-between items-center mb-6 px-1">
-            <button type="button" onClick={prevMonth} className="text-[#7C5DFA] hover:text-[#9277FF] focus:outline-none p-1">
+            <button type="button" onClick={prevMonth} className="text-[#7C5DFA] hover:text-[#9277FF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5DFA] rounded p-1">
               <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 1L2 5l4 4" stroke="currentColor" strokeWidth="2"/></svg>
             </button>
             <span className="font-bold text-[#0C0E16] dark:text-white text-sm tracking-wide">
               {format(currentMonth, 'MMM yyyy')}
             </span>
-            <button type="button" onClick={nextMonth} className="text-[#7C5DFA] hover:text-[#9277FF] focus:outline-none p-1">
+            <button type="button" onClick={nextMonth} className="text-[#7C5DFA] hover:text-[#9277FF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5DFA] rounded p-1">
               <svg width="7" height="10" viewBox="0 0 7 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1l4 4-4 4" stroke="currentColor" strokeWidth="2"/></svg>
             </button>
           </div>
@@ -100,7 +109,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange, className, id 
                      e.stopPropagation();
                      handleDateClick(day);
                   }}
-                  className={`text-sm font-bold hover:text-[#7C5DFA] focus:outline-none transition-colors ${
+                  className={`text-sm font-bold hover:text-[#7C5DFA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#7C5DFA] rounded transition-colors ${
                     isSelected 
                       ? 'text-[#7C5DFA]' 
                       : 'text-[#0C0E16] dark:text-[#DFE3FA]'
