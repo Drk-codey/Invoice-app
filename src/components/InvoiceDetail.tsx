@@ -64,8 +64,7 @@ const InvoiceDetail: React.FC = () => {
           {canMarkAsPaid && (
             <button
               onClick={handleMarkAsPaid}
-              disabled={isPaid}
-              className="px-6 py-4 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              className="px-6 py-4 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
             >
               Mark as Paid
             </button>
