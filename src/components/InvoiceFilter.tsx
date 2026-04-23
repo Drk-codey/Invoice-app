@@ -10,9 +10,12 @@ const STATUSES: Array<{ value: InvoiceStatus | 'all'; label: string }> = [
 ];
 
 const InvoiceFilter: React.FC = () => {
-  const { filter, dispatch } = useInvoices();
+  const { filter, filteredInvoices, dispatch } = useInvoices();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Live announcement text
+  const [announcement, setAnnouncement] = useState('');
 
   // Selected statuses (multi for visual feedback)
   const [selected, setSelected] = useState<Set<InvoiceStatus | 'all'>>(new Set([filter]));
@@ -35,12 +38,32 @@ const InvoiceFilter: React.FC = () => {
     setSelected(new Set([value]));
     dispatch({ type: 'SET_FILTER', payload: value });
     setOpen(false);
+
+    // Announce the filter result to screen readers
+    const count = filteredInvoices.length;
+    const statusLabel = value === 'all' ? '' : ` ${value}`;
+    const invoiceWord = count === 1 ? 'invoice' : 'invoices';
+    setAnnouncement(
+      `Showing ${count}${statusLabel} ${invoiceWord}`
+    );
+    // Clear after announcement is read so it refires on next change
+    setTimeout(() => setAnnouncement(''), 1500);
   };
+
+  
 
   const label = filter === 'all' ? 'Filter by status' : `Filter: ${filter.charAt(0).toUpperCase() + filter.slice(1)}`;
 
   return (
     <div className="relative" ref={ref}>
+      <div
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {announcement}
+      </div>
       <button
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-3 font-bold text-[#0C0E16] dark:text-white hover:text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
