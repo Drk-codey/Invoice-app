@@ -52,7 +52,7 @@ function reducer(state: InvoiceState, action: InvoiceAction): InvoiceState {
       return {
         ...state,
         invoices: state.invoices.map((inv) =>
-          inv.id === action.payload ? { ...inv, status: 'paid' } : inv
+          inv.id === action.payload && inv.status === 'pending' ? { ...inv, status: 'paid' } : inv
         ),
       };
     case 'SET_FILTER':

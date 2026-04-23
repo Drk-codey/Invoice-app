@@ -20,7 +20,9 @@ const InvoiceDetail: React.FC = () => {
   const handleMarkAsPaid = () => dispatch({ type: 'MARK_AS_PAID', payload: currentInvoice.id });
 
   const isPaid = currentInvoice.status === 'paid';
-  const isDraft = currentInvoice.status === 'draft';
+  const isPending = currentInvoice.status === 'pending';
+  const canMarkAsPaid = isPending;
+  const canEdit = !isPaid;
 
   return (
     <main className="flex-1 px-6 md:px-12 lg:px-0 py-10 md:py-16 pb-32 sm:pb-16 max-w-3xl mx-auto w-full">
@@ -45,7 +47,7 @@ const InvoiceDetail: React.FC = () => {
 
         {/* Action buttons */}
         <div className="hidden sm:flex items-center gap-4">
-          {!isPaid && (
+          {canEdit && (
             <button
               onClick={handleEdit}
               className="px-6 py-4 rounded-full bg-[#F9FAFE] dark:bg-[#252945] text-[#7E88C3] dark:text-[#DFE3FA] font-bold text-sm hover:bg-[#DFE3FA] dark:hover:bg-[#DFE3FA] dark:hover:text-[#888EB0] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -59,7 +61,7 @@ const InvoiceDetail: React.FC = () => {
           >
             Delete
           </button>
-          {(isDraft || !isPaid) && (
+          {canMarkAsPaid && (
             <button
               onClick={handleMarkAsPaid}
               disabled={isPaid}
@@ -176,7 +178,7 @@ const InvoiceDetail: React.FC = () => {
 
       {/* Mobile action buttons */}
       <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-[#1E2139] px-6 py-6 flex justify-center gap-4 shadow-[0_-8px_24px_rgba(0,0,0,0.1)]">
-        {!isPaid && (
+        {canEdit && (
           <button
             onClick={handleEdit}
             className="px-5 py-4 rounded-full bg-[#F9FAFE] dark:bg-[#252945] text-[#7E88C3] dark:text-[#DFE3FA] font-bold text-sm hover:bg-[#DFE3FA] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
@@ -190,7 +192,7 @@ const InvoiceDetail: React.FC = () => {
         >
           Delete
         </button>
-        {!isPaid && (
+        {canMarkAsPaid && (
           <button
             onClick={handleMarkAsPaid}
             className="px-5 py-4 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary-hover transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
