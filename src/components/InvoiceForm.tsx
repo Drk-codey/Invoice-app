@@ -157,7 +157,8 @@ const InvoiceForm: React.FC = () => {
 
   const handleSaveEdit = () => {
     if (!validate(form, false)) return;
-    const invoice = buildInvoice(editingInvoice?.status || 'pending');
+    const newStatus = editingInvoice?.status === 'draft' ? 'pending' : (editingInvoice?.status || 'pending');
+    const invoice = buildInvoice(newStatus);
     dispatch({ type: 'UPDATE_INVOICE', payload: invoice });
     dispatch({ type: 'CLOSE_FORM' });
   };
