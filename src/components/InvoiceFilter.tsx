@@ -10,7 +10,7 @@ const STATUSES: Array<{ value: InvoiceStatus | 'all'; label: string }> = [
 ];
 
 const InvoiceFilter: React.FC = () => {
-  const { filter, filteredInvoices, dispatch } = useInvoices();
+  const { filter, invoices, dispatch } = useInvoices();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -35,20 +35,20 @@ const InvoiceFilter: React.FC = () => {
   }, []);
 
   const handleToggle = (value: InvoiceStatus | 'all') => {
-    setSelected(new Set([value]));
-    dispatch({ type: 'SET_FILTER', payload: value });
-    setOpen(false);
+  setSelected(new Set([value]));
+  dispatch({ type: 'SET_FILTER', payload: value });
+  setOpen(false);
 
-    // Announce the filter result to screen readers
-    const count = filteredInvoices.length;
-    const statusLabel = value === 'all' ? '' : ` ${value}`;
-    const invoiceWord = count === 1 ? 'invoice' : 'invoices';
-    setAnnouncement(
-      `Showing ${count}${statusLabel} ${invoiceWord}`
-    );
-    // Clear after announcement is read so it refires on next change
-    setTimeout(() => setAnnouncement(''), 1500);
-  };
+  // Compute count from source truth, not stale filteredInvoices
+  const newCount = value === 'all'
+    ? invoices.length
+    : invoices.filter(inv => inv.status === value).length;
+
+  const statusLabel = value === 'all' ? '' : ` ${value}`;
+  const invoiceWord = newCount === 1 ? 'invoice' : 'invoices';
+  setAnnouncement(`Showing ${newCount}${statusLabel} ${invoiceWord}`);
+  setTimeout(() => setAnnouncement(''), 1500);
+};
 
   
 
